@@ -1,0 +1,96 @@
+services:
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pricer
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  embedder:
+    build:
+      context: . # <--- Changed to Root
+      dockerfile: Dockerfile
+      target: embedder # <--- Selects the specific stage
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/pricer
+    depends_on:
+      db:
+        condition: service_healthy
+
+  ml:
+    build:
+      context: . # <--- Changed to Root
+      dockerfile: Dockerfile
+      target: ml
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/pricer
+    volumes:
+      - ./models:/app/models
+    depends_on:
+      db:
+        condition: service_healthy
+
+  api:
+    build:
+      context: . # <--- Changed to Root
+      dockerfile: Dockerfile
+      target: api
+    ports:
+      - "8000:8000" # <--- Mapped container port 8000 to host 8000
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/pricer
+    volumes:
+      - ./api:/app/api
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: . # <--- Changed to Root
+      dockerfile: frontend/Dockerfile.dev
+    ports:
+      - "4321:4321"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
+    command: npm run dev --host 0.0.0.0 --port 4321
+
+  crawler:
+    build:
+      context: . # <--- Changed to Root
+      dockerfile: ingestion/olx/Dockerfile
+      target: crawler
+    healthcheck:
+      test: ["CMD", "find /tmp/crawler_heartbeat -mmin -5 | grep . || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/pricer
+      - OLX_START_URL=https://www.olx.pl/elektronika/?search%5Border%5D=created_at:desc
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+    external: true
+    name: storage_postgres_data

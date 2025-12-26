@@ -1,0 +1,5 @@
+pipeline
+playwright
+sqlalchemy
+psycopg2-binary
+pandas

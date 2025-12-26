@@ -1,0 +1,16 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "noEmit": true,
+    "module": "ES2022",
+    "moduleResolution": "node16",
+    "allowJs": true,
+    "checkJs": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "ignoreDeprecations": "5.0",
+    "importsNotUsedAsValues": "remove",
+    "preserveValueImports": null,
+    "jsx": "preserve"
+  }
+}

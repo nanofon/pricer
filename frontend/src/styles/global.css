@@ -1,0 +1,60 @@
+:root {
+  /* Light Mode - Slate & Indigo */
+  --background: #f8fafc; /* Very light slate gray */
+  --surface: #ffffff; /* Pure white for cards */
+
+  --text: #0f172a; /* Dark slate for primary text */
+  --text-secondary: #64748b; /* Muted slate for captions/subtitles */
+
+  --accent: #4f46e5; /* Indigo-600 */
+  --accent-secondary: #818cf8; /* Lighter indigo */
+
+  --border: #e2e8f0; /* Subtle borders */
+}
+
+html.dark {
+  /* Dark Mode - Deep Ocean & Violet */
+  --background: #0f172a; /* Deep slate/navy */
+  --surface: #1e293b; /* Lighter slate for cards */
+
+  --text: #f8fafc; /* Off-white for readability */
+  --text-secondary: #94a3b8; /* Muted blue-gray */
+
+  --accent: #818cf8; /* Indigo-400 (brighter for dark bg) */
+  --accent-secondary: #c7d2fe; /* Very light indigo/lavender */
+
+  --border: #334155; /* Subtle dark border */
+}
+
+html,
+body {
+  font-family: system-ui;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.ag-theme-alpine,
+.ag-theme-alpine-dark {
+  --ag-background-color: var(--surface);
+  --ag-header-background-color: var(--background);
+  --ag-foreground-color: var(--text);
+  --ag-secondary-foreground-color: var(--accent);
+  --ag-border-color: var(--border);
+  --ag-range-selection-border-color: var(--accent);
+  --ag-selected-row-background-color: color-mix(
+    in srgb,
+    var(--accent),
+    transparent 90%
+  );
+
+  --ag-input-focus-border-color: var(--accent);
+  --ag-input-border-color: var(--border);
+
+  --ag-row-hover-color: color-mix(in srgb, var(--text), transparent 96%);
+}

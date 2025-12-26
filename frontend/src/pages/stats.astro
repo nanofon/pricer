@@ -1,0 +1,9 @@
+---
+const title = "Stats";
+import Main from "../layouts/Main.astro";
+import { StatsView } from "../components/StatsView.tsx";
+---
+
+<Main title={title}>
+  <StatsView client:load />
+</Main>
