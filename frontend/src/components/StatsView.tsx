@@ -5,8 +5,10 @@ type Stats = {
   total_current_deals: number;
   vectorized_deals: number;
   priced_deals: number;
+  price_new_known_deals: number;
   deals_with_eta: number;
   deals_above_predicted: number;
+  valid_deals: number;
 };
 
 export const StatsView = () => {
@@ -56,6 +58,18 @@ export const StatsView = () => {
       <div
         style={{
           width:
+            (stats.price_new_known_deals / (stats.total_current_deals + 1)) *
+              90 +
+            "vw",
+          backgroundColor: "var(--accent)",
+          padding: "1rem",
+        }}
+      >
+        <p>of them known price of new: {stats.price_new_known_deals}</p>
+      </div>
+      <div
+        style={{
+          width:
             (stats.priced_deals / (stats.total_current_deals + 1)) * 90 + "vw",
           backgroundColor: "var(--accent)",
           padding: "1rem",
@@ -74,6 +88,16 @@ export const StatsView = () => {
         }}
       >
         <p>of them above predicted: {stats.deals_above_predicted}</p>
+      </div>
+      <div
+        style={{
+          width:
+            (stats.valid_deals / (stats.total_current_deals + 1)) * 90 + "vw",
+          backgroundColor: "var(--accent)",
+          padding: "1rem",
+        }}
+      >
+        <p>of them valid and liquid: {stats.valid_deals}</p>
       </div>
       <div
         style={{

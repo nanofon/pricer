@@ -13,6 +13,6 @@ async def service_loop():
         except Exception as e:
             logging.error(f"pipeline -> service: CRITICAL ERROR: {e}")
 
-        sleep = random.uniform(3500, 3700)
+        sleep = random.uniform(1500, 2700)
         logging.info(f"pipeline -> service: Sleeping {sleep/60:.1f} minutes")
         await asyncio.sleep(sleep)

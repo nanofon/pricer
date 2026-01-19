@@ -14,7 +14,7 @@ from catboost import CatBoostRegressor, Pool
 DB_URL = os.getenv("DATABASE_URL", "postgresql://postgres:password@db:5432/pricer")
 engine = create_engine(DB_URL)
 
-MODEL_PATH = "/app/models/survivor_model.cbm"
+MODEL_PATH = "/app/models/survive_model.cbm"
 
 # Define categorical features globally
 CATEGORICAL_FEATURES = [
@@ -79,7 +79,7 @@ def run_predictions(model):
                sku, price, condition, city, 
                seller_id, embeddings::text as embeddings
         FROM listings 
-        WHERE embeddings IS NOT NULL
+        WHERE embeddings IS NOT NULL AND price IS NOT NULL
     """
 
     df = pd.read_sql(query, engine)
@@ -91,7 +91,20 @@ def run_predictions(model):
     df = preprocess_data(df)
 
     # Prepare features to match training format
-    X = df.drop("id", axis=1)
+    # Training X columns order (from train_cycle):
+    # price, created_at, category, sku, condition, city, seller_id, emb_0...
+
+    # Preprocess creates time_on_market, so we must drop it
+    X = df.drop(["id", "time_on_market"], axis=1)
+
+    # Ensure column order matches training
+    # Note: price is first in train query. created_at is second.
+    cols = (
+        ["price", "created_at"]
+        + CATEGORICAL_FEATURES
+        + [c for c in X.columns if c.startswith("emb_")]
+    )
+    X = X[cols]
 
     # Generate predictions and round to INT
     preds = model.predict(X)
@@ -138,7 +151,7 @@ def train_cycle():
 
     df = preprocess_data(df)
 
-    if df["time_on_market"].value_counts().shape[0] < 5:
+    if df["time_on_market"].value_counts().shape[0] < 2:
         logger.info("Not enough data to train yet...")
         return None
 
@@ -159,9 +172,19 @@ def train_cycle():
 
     logger.info("Model initialized")
 
-    # 6. TRAINING (without incremental - not supported with embeddings expanded)
-    logger.info("Training survival model from scratch...")
-    model.fit(X, y, cat_features=CATEGORICAL_FEATURES)
+    # 6. TRAINING (Incremental if possible)
+    if os.path.exists(MODEL_PATH):
+        logger.info(f"Found existing model at {MODEL_PATH}. Resuming training...")
+        try:
+            model.fit(X, y, cat_features=CATEGORICAL_FEATURES, init_model=MODEL_PATH)
+        except Exception as e:
+            logger.warning(
+                f"Incremental training failed: {e}. Falling back to training from scratch..."
+            )
+            model.fit(X, y, cat_features=CATEGORICAL_FEATURES)
+    else:
+        logger.info("No existing model found. Training survival model from scratch...")
+        model.fit(X, y, cat_features=CATEGORICAL_FEATURES)
 
     # 7. PERSIST
     os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)

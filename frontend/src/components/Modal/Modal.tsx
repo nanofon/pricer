@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export const Modal = ({
   selectedRow,
   onClose,
@@ -5,6 +7,7 @@ export const Modal = ({
   selectedRow: any;
   onClose: () => void;
 }) => {
+  const [price_of_new, setPrice_of_new] = useState(selectedRow.price_predicted);
   return (
     <>
       {/* Backdrop to dim the background */}
@@ -103,9 +106,29 @@ export const Modal = ({
           <img
             src={selectedRow.image}
             alt={selectedRow.name}
-            width={500}
-            height={500}
+            style={{ width: "50%", height: "auto" }}
           />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <label>
+            Price new:
+            <input
+              type="number"
+              name="price_of_new"
+              onChange={(e) => {
+                setPrice_of_new(e.target.value);
+              }}
+            />
+            <button type="submit" onClick={() => console.log(price_of_new)}>
+              Update
+            </button>
+          </label>
+          <label>
+            <input type="checkbox" name="illiquid" />
+            Illiquid
+            <input type="checkbox" name="liquid" />
+            Liquid
+          </label>
         </div>
       </div>
     </>

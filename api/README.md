@@ -11,12 +11,14 @@ This is a FastAPI-based service that serves OLX listing data stored in a Postgre
 ## Installation
 
 1.  **Create a virtual environment** (recommended):
+
     ```bash
     python -m venv venv
     source venv/bin/activate  # On Windows: venv\Scripts\activate
     ```
 
 2.  **Install dependencies**:
+
     ```bash
     pip install -r requirements.txt
     ```
@@ -40,21 +42,28 @@ The API will be available at `http://localhost:8000`.
 ## Endpoints
 
 ### `GET /`
+
 Health check endpoint.
+
 - **Response**: `{"message": "OLX Listings API is running. Go to /docs for Swagger UI."}`
 
 ### `GET /listings`
+
 Retrieve a paginated list of listings.
+
 - **Query Parameters**:
-    - `page` (int): Page number (default: 1).
-    - `size` (int): Number of items per page (default: 50, max: 100).
+  - `page` (int): Page number (default: 1).
+  - `size` (int): Number of items per page (default: 50, max: 100).
 - **Response**: A list of listing objects.
 
 ### Documentation
+
 Interactive API documentation (Swagger UI) is available at:
+
 - `http://localhost:8000/docs`
 
 ## Development
+
 - `main.py`: Entry point for the FastAPI application.
 - `database.py`: Database connection and query logic (SQLAlchemy).
 - `test_db.py`: Script to test database connectivity.

@@ -13,10 +13,10 @@ if __name__ == "__main__":
                 logger.info("Running predictions for pricer...")
                 price_model.run_predictions(price_model_instance)
             logger.info("Training survivor...")
-            survivor_model_instance = survive_model.train_cycle()
-            if survivor_model_instance:
+            survive_model_instance = survive_model.train_cycle()
+            if survive_model_instance:
                 logger.info("Running predictions for survivor...")
-                survivor_model.run_predictions(survivor_model_instance)
+                survive_model.run_predictions(survive_model_instance)
         except Exception as e:
             logger.error(f"Error in main loop: {e}", exc_info=True)
         logger.info("Sleeping for 1 hour...")

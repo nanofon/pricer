@@ -1,23 +1,9 @@
 ---
 const title = "Listings";
 import Main from "../layouts/Main.astro";
-import { Categories } from "../components/Categories.tsx";
-import { Listings } from "../components/Listings.tsx";
+import { Listings } from "../components/Listings/Listings.tsx";
 ---
 
 <Main title={title}>
-  <div class="container">
-    <Categories client:load />
-    <Listings client:load />
-  </div>
+  <Listings client:load />
 </Main>
-
-<style>
-  .container {
-    padding: 1rem;
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 1rem;
-    width: calc(100vw - 3rem);
-  }
-</style>

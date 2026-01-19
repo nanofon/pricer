@@ -1,26 +1,20 @@
-import { getCategories } from "../api";
+import { getCategories } from "../api.ts";
 import { useState, useEffect, useMemo } from "react";
-import {
-  AllCommunityModule,
-  ModuleRegistry,
-  themeAlpine,
-} from "ag-grid-community";
+import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
 import type { ColDef } from "ag-grid-community";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 interface Category {
-  json_ld_category: string | null;
+  category: string | null;
   deal_count: number;
-  total_diff: number;
   mean_diff: number;
+  total_diff: number;
 }
 
 export const Categories = () => {
   const [isDark, setIsDark] = useState(false);
-  const [page, setPage] = useState(1);
-  const [size, setSize] = useState(10);
   const [categories, setCategories] = useState<Category[]>([]);
 
   const defaultColDef = useMemo(() => {
@@ -34,26 +28,46 @@ export const Categories = () => {
 
   const columnDefs: ColDef<Category>[] = [
     {
-      field: "json_ld_category",
+      field: "category",
+      headerName: "Category",
       cellRenderer: (params: any) => {
         return (
-          params?.data?.json_ld_category?.slice(31, -1).replace("/", " -> ") ||
-          "None"
+          params?.data?.category?.slice(31, -1).replace("/", " -> ") || "None"
         );
       },
       flex: 2,
     },
-    { field: "deal_count", flex: 1 },
-    { field: "total_diff", flex: 1 },
+    { field: "deal_count", headerName: "Total Count", flex: 1 },
     {
       field: "mean_diff",
-      valueGetter: (params: any) => parseInt(params.data.mean_diff),
+      headerName: "Mean Diff",
+      valueFormatter: (params: any) => params.value.toFixed(0),
       flex: 1,
     },
+    { field: "total_diff", headerName: "Total Diff", flex: 1 },
   ];
 
+  const fetchData = async (page: number, size: number) => {
+    const data = await getCategories(page, size);
+    setCategories([...categories, ...data]);
+    if (data.length === size) {
+      fetchData(page + 1, size);
+    }
+  };
+
   useEffect(() => {
-    getCategories(page, size).then((data: Category[]) => setCategories(data));
+    const fetchAllData = async (page: number = 1) => {
+      try {
+        const data = await getCategories(page, 50);
+        if (data.length > 0) {
+          setCategories((categories) => [...categories, ...data]);
+          fetchAllData(page + 1);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchAllData();
   }, []);
 
   useEffect(() => {
@@ -73,14 +87,15 @@ export const Categories = () => {
   const gridTheme = isDark ? "ag-theme-alpine-dark" : "ag-theme-alpine";
 
   return (
-    <div className={gridTheme} style={{ height: "90dvh", width: "100%" }}>
+    <div className={gridTheme} style={{ height: "90vh", width: "100%" }}>
       <AgGridReact<Category>
+        className="ag-theme-alpine"
         rowData={categories}
         columnDefs={columnDefs}
         defaultColDef={defaultColDef}
         pagination={true}
-        paginationPageSize={size}
-        paginationPageSizeSelector={[10, 20, 50]}
+        paginationPageSize={15}
+        paginationPageSizeSelector={[15, 30, 50]}
       />
     </div>
   );

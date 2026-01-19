@@ -11,7 +11,7 @@ async def check_sold_listings(session, page, batch_size=200):
 
     if not rows:
         logging.info("No unsold listings to check.")
-        return
+        return False
 
     logging.info(f"Checking sold status for {len(rows)} listings")
 
@@ -26,3 +26,5 @@ async def check_sold_listings(session, page, batch_size=200):
 
         except Exception as e:
             logging.error(f"Error checking sold status for {url}: {e}")
+
+    return True

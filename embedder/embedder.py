@@ -31,7 +31,7 @@ def process_undone_listings():
                 """
                 SELECT id, name, description 
                 FROM listings 
-                WHERE embeddings IS NULL 
+                WHERE embeddings IS NULL
                 LIMIT %s
             """,
                 (BATCH_SIZE,),

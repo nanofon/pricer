@@ -1,0 +1,194 @@
+.container {
+  display: flex;
+  flex-direction: column; /* Mobile first */
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 100vh; /* Occupy full viewport height */
+  max-height: 100vh;
+}
+
+@media (min-width: 768px) {
+  .container {
+    flex-direction: row;
+    height: auto;
+    max-height: 90vh; /* Slightly less than full height on desktop to show it's a modal/card */
+    border: 1px solid var(--border);
+  }
+}
+
+.imageSection {
+  flex: 1;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 40vh; /* Ensure image takes space on mobile */
+}
+
+@media (min-width: 768px) {
+  .imageSection {
+    min-height: auto;
+    flex: 1.2; /* Give image slightly more width on desktop */
+  }
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Show full image */
+  max-height: 100vh;
+}
+
+.detailsSection {
+  flex: 1;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow-y: auto; /* Allow scrolling content if it gets too long */
+}
+
+.header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1rem;
+}
+
+.title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.statValue {
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: var(--accent);
+}
+
+.descriptionSection {
+  flex: 1; /* Take available space */
+}
+
+.descriptionToggle {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+.descriptionToggle:hover {
+  text-decoration: underline;
+}
+
+.descriptionText {
+  color: var(--text);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.descriptionTruncated {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.controlsSection {
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.controlLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.inputRow {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.priceInput {
+  flex: 1;
+  padding: 0.5rem;
+  width: 8ch;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--background);
+  color: var(--text);
+}
+
+.updateButton {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.updateButton:hover {
+  opacity: 0.9;
+}
+
+.checkboxGroup {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--accent);
+}

@@ -1,0 +1,43 @@
+---
+const title = "Listings";
+import Main from "../layouts/Main.astro";
+import { ListingItem } from "../components/ListingItem/ListingItem";
+
+const mockListing = {
+  name: "Sony PlayStation 5 Console (Disc Edition) - Good Condition",
+  image:
+    "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?ixlib=rb-4.0.3&auto=format&fit=crop&w=1352&q=80",
+  description:
+    "Selling my PS5 Disc Edition. It's in great condition, comes with one controller, HDMI cable, power cord, and stand. No box included. Have played it for about 6 months, works perfectly. \n\nReason for selling: switching to PC gaming.\n\nPrice is slightly negotiable but low ballers will be ignored. Meet up in downtown area or can ship at buyer's expense.",
+  price: 450.0,
+  price_predicted: 420.0,
+  price_difference: 30.0,
+  price_new: 499.99,
+  is_illiquid: false,
+  is_invalid: false,
+  url: "https://example.com/listing/123",
+};
+
+const handleUpdateNewPrice = (price) => {
+  console.log("New price updated:", price);
+  alert(`New price updated to: ${price}`);
+};
+
+const handleToggleIlliquid = (value) => {
+  console.log("Illiquid toggled:", value);
+};
+
+const handleToggleInvalid = (value) => {
+  console.log("Invalid toggled:", value);
+};
+---
+
+<Main title={title}>
+  <ListingItem
+    client:load
+    listing={mockListing}
+    onUpdateNewPrice={handleUpdateNewPrice}
+    onToggleIlliquid={handleToggleIlliquid}
+    onToggleInvalid={handleToggleInvalid}
+  />
+</Main>
